@@ -1,10 +1,10 @@
 const router = require("express").Router();
+const { getSeats } = require("./handlers");
 
 const NUM_OF_ROWS = 8;
 const SEATS_PER_ROW = 12;
 
-// Code that is generating the seats.
-// ----------------------------------
+// Delete the below function and switch for fetch
 const seats = {};
 const row = ["A", "B", "C", "D", "E", "F", "G", "H"];
 for (let r = 0; r < row.length; r++) {
@@ -15,7 +15,6 @@ for (let r = 0; r < row.length; r++) {
     };
   }
 }
-// ----------------------------------
 //////// HELPERS
 const getRowName = (rowIndex) => {
   return String.fromCharCode(65 + rowIndex);
@@ -40,20 +39,20 @@ const randomlyBookSeats = (num) => {
 
 let state;
 
-router.get("/api/seat-availability", async (req, res) => {
-  if (!state) {
-    state = {
-      bookedSeats: randomlyBookSeats(30),
-    };
-  }
+// router.get("/api/seat-availability", async (req, res) => {
+//   if (!state) {
+//     state = {
+//       bookedSeats: randomlyBookSeats(30),
+//     };
+//   }
 
-  return res.json({
-    seats: seats,
-    bookedSeats: state.bookedSeats,
-    numOfRows: 8,
-    seatsPerRow: 12,
-  });
-});
+//   return res.json({
+//     seats: seats,
+//     bookedSeats: state.bookedSeats,
+//     numOfRows: 8,
+//     seatsPerRow: 12,
+//   });
+// });
 
 let lastBookingAttemptSucceeded = false;
 
@@ -100,4 +99,6 @@ router.post("/api/book-seat", async (req, res) => {
   });
 });
 
-module.exports = router;
+// Endpoint that retrieves all seats
+router.get("/api/seat-availability", getSeats);
+module.exports = { router };
